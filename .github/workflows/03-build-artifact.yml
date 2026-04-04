@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  # Keep common image values in one place so the build steps stay readable.
+  # Keeppp common image values in one place so the build steps stay readable.
   IMAGE_NAME: tiny-health-app
   IMAGE_TAR: tiny-health-app.tar
   ARTIFACT_NAME: tiny-health-app-image

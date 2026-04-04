@@ -8,7 +8,7 @@ on:
       - ".github/workflows/02-ci.yml"
       - "**/*"
   schedule:
-    - cron: '0 9 * * *'
+    - cron: '25 10 * * *'
   workflow_dispatch:
 
 jobs:

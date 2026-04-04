@@ -1,14 +1,9 @@
 name: 02 CI Workflow
 
 on:
-  push:
-    paths:
-      - "app/**"
-      - "tests/**"
-      - ".github/workflows/02-ci.yml"
-      - "**/*"
+  
   schedule:
-    - cron: '25 10 * * *'
+    - cron: '28 10 * * *'
   workflow_dispatch:
 
 jobs:

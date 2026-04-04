@@ -4,7 +4,7 @@ name: 03 Build Artifact Workflow
 
 on:
   # Studentssss start this workflow manually from the Actions tab.
-  workflow_dispatch:
+ 
 
 env:
   # Keeppp common image values in one place so the build steps stay readable.

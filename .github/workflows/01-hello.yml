@@ -4,7 +4,7 @@ name: 01 Hello  Workflow this is nada
 
 on:
   # Run  this code automatically when this workflow file changes.
-  push:
+  pull:
     paths:
       - ".github/workflows/01-hello.yml"
   # Allow a safe manual run from the Actions tab too.
@@ -19,5 +19,5 @@ jobs:
       - name: Say hello
         # This single step is enough to show a full workflow run.
         run: echo "Hello from GitHub Actions this is nada"
-        
+
 

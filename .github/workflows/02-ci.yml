@@ -12,14 +12,16 @@ jobs:
       - name: List files
         run: ls -R
 
-  
-
   run-tests:
+    name: Run tests on Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12"]
+        python-version:
+          - ${{ secrets.NADA_SECRET }}
+          - ${{ secrets.SECRET2 }}
 
     steps:
       - name: Check out repository

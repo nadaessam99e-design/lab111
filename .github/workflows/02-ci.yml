@@ -4,22 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  list-files:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-      - name: List files
-        run: ls -R
-
-  scheduled-hello:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-      - name: Say Hello
-        run: echo "Hello! This is the scheduled run."
-
+ 
   run-tests:
     runs-on: ubuntu-latest
 

@@ -1,4 +1,4 @@
-# This first workflow is intentionally tiny.
+# irst workflow is intentionally tiny.
 # It helps students see what a GitHub Actions run looks like.
 name: 01 Hello Workflow
 

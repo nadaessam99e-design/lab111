@@ -4,7 +4,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 
 def route_request(path):
     if path == "/health":
-        return 200, {"status": "ok"}
+        return 200, {"status": "okkkk"}
 
     return 404, {"error": "not found"}
 

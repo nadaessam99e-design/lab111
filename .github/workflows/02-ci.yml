@@ -9,7 +9,7 @@ on:
       - "app/**"
       - "tests/**"
       - ".github/workflows/02-ci.yml"
-  # Allow a safe manual run before students trigger it with a code change.
+  # Allow a safe manual rrrun before students trigger it with a code change.
   workflow_dispatch:
 
 jobs:

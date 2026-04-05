@@ -1,53 +1,32 @@
-name: 04 Deploy Workflow
+name: Build Docker with ARG
 
 on:
-  workflow_run:
-    workflows: ["03 Build Artifact Workflow"]
-    types: [completed]
-
-permissions:
-  actions: read
-  contents: read
+  workflow_dispatch:
+    inputs:
+      form-value:
+        description: "Value for the form"
+        required: true
+        default: "default-value"
 
 jobs:
-  deploy-package:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  build-docker:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v8
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Build Docker image with ARG
+        run: |
+          echo "Building Docker image with FORM_VALUE=${{ github.event.inputs.form-value }}"
+          docker build \
+            --build-arg FORM_VALUE="${{ github.event.inputs.form-value }}" \
+            -t tiny-health-app:${{ github.event.inputs.form-value }} .
+          
+      - name: Save Docker image as artifact
+        run: docker save tiny-health-app:${{ github.event.inputs.form-value }} -o tiny-health-app.tar
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: tiny-health-app-image
-          github-token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          run-id: ${{ github.event.workflow_run.id }}
-          path: downloaded-artifact
-
-      - name: Show downloaded files
-        run: ls -R downloaded-artifact
-
-      - name: Load Docker image
-        run: docker load --input downloaded-artifact/tiny-health-app.tar
-
-      - name: Start container
-        run: |
-          docker rm -f tiny-health-container || true
-          docker run -d --name tiny-health-container -p 8000:8000 tiny-health-app:3.12-slim
-
-      - name: Smoke test deployed app
-        run: |
-          for attempt in 1 2 3 4 5; do
-            if curl --fail --silent http://127.0.0.1:8000/health; then
-              echo "App is ready!"
-              exit 0
-            fi
-            echo "Waiting for app to become ready..."
-            sleep 2
-          done
-          echo "App did not become ready in time."
-          exit 1
-
-      - name: Stop container
-        if: always()
-        run: docker rm -f tiny-health-container || true
+          path: tiny-health-app.tar

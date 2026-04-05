@@ -29,38 +29,34 @@ jobs:
         run: |
           docker build -t "${IMAGE_NAME}:${{ steps.image-tag.outputs.image_tag }}" .
 
-      - name: (Optional) Push Docker image
+      - name: Optional push (skipped)
         run: |
-          echo "Skipping login, push skipped for now"
-          # docker push ... (add login + push once secrets ready)
+          echo "Skipping Docker login and push for now."
 
   deploy-to-aks:
     needs: build-and-push-image
     runs-on: ubuntu-latest
 
     steps:
-      - name: Load Docker image locally
-        run: |
-          docker load --input ./Dockerfile || echo "Skipping load from file for now"
-
       - name: Start container
         run: |
           docker run -d \
             --name tiny-health-container \
             -p 8000:8000 \
-            "${IMAGE_NAME}:${{ needs.build-and-push-image.outputs.image_tag }}" || echo "Container start skipped"
+            "${IMAGE_NAME}:${{ needs.build-and-push-image.outputs.image_tag }}"
 
       - name: Smoke test deployed app
         run: |
           for attempt in 1 2 3 4 5; do
             if curl --fail --silent http://127.0.0.1:8000/health; then
+              echo "App is ready!"
               exit 0
             fi
             echo "Waiting for app to become ready..."
             sleep 2
           done
           echo "App did not become ready in time."
-          exit 1 || echo "Smoke test skipped"
+          exit 1
 
       - name: Stop container
         if: always()

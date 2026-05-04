@@ -1,16 +1,13 @@
-name: 01 CI - Verify PR
+name: CI Verify
 
 on:
+  push:
+    branches: [main]
   pull_request:
-    branches: [ "main" ]
-    types: [opened, synchronize, reopened]
-    paths:
-      - "app/**"
-      - "tests/**"
-
+    branches: [main]
 
 jobs:
-  verify:
+  python-check:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -21,5 +18,26 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
       - name: Run tests
         run: python -m unittest discover -s tests -v
+
+  trivy-scan:
+    runs-on: ubuntu-latest
+    needs: python-check
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          severity: "CRITICAL,HIGH"
+          format: "table"
+          exit-code: "0"
